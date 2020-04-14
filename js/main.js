@@ -41,13 +41,18 @@ window.onload = (function() {
         let circle;
 
         response.forEach((location) => {
+
             circle = L.circle([location.lat, location.lon], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
                 radius: location.latestTotalCases
             }).addTo(map);
-
+            const popups = L.popup()
+                .setContent(`<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
+                               <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+                                <b>Country</b>: ${location.country}`);
+            circle.bindPopup(popups).openPopup();
         });
         $(".loader").hide();
     }
@@ -56,4 +61,5 @@ window.onload = (function() {
         $(".loader").hide();
         alert("ERROR OCCUR");
     }
+
 })();
