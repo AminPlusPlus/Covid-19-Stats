@@ -31,16 +31,16 @@ window.onload = (function() {
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
-        // beforeSend: function() {
-        //     $(".loader").show();
-        // },
+        beforeSend: function() {
+            $(".loader").show();
+        },
     }).done(onSuccess).fail(onFail);
 
     function onSuccess(response) {
         console.log(response);
         let circle;
 
-        JSON.parse(response).forEach((location) => {
+        response.forEach((location) => {
             circle = L.circle([location.lat, location.lon], {
                 color: 'red',
                 fillColor: '#f03',
@@ -53,8 +53,11 @@ window.onload = (function() {
     }
 
     function onFail() {
-        // const loader = document.getElementsByClassName("loader")[0];
-        // loader.style.display = "none";
+        $(".loader").hide();
         alert("ERROR OCCUR");
     }
+
+    $.getJSON("https://covid-19-273501.appspot.com/api/v1/confirms" + "?callback=?", function(data) {
+        console.log(data.title); // Logs "jQuery Howto"
+    });
 })();
