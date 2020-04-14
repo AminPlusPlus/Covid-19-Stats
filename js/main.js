@@ -56,8 +56,4 @@ window.onload = (function() {
         $(".loader").hide();
         alert("ERROR OCCUR");
     }
-
-    $.getJSON("https://covid-19-273501.appspot.com/api/v1/confirms" + "?callback=?", function(data) {
-        console.log(data.title); // Logs "jQuery Howto"
-    });
 })();
