@@ -1,50 +1,55 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 9 */
 /*jslint browser: true */
 /*global window */
-window.onload = (function () {
+window.onload = (function() {
     "use strict";
-    let open = false;
+    let openSearch = false;
     var map = L.map('mapid', {
-        zoomControl: false
-    }).setView([0, 0], 4);
+        zoomControl: false,
+        worldCopyJump: true
+    }).setView([0,0], 4);
+    const attribution = '&copy; <a href="https://www.openstreetmaps.org/copyright">OpenStreetMap</a> contributors';
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution,
             maxZoom: 18,
             minZoom: 4,
+            tap: false,
             zoomControl: false,
         }).addTo(map);
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
+
     $.ajax({
         url: "https://covid-19-273501.appspot.com/api/v1/confirms",
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
-        beforeSend: function () {
+        beforeSend: function() {
             $(".loader").show();
         },
     }).done(onSuccess).fail(onFail);
 
     function onSuccess(response) {
-        console.log(response);
         let circle;
-
         response.forEach((location) => {
-
             circle = L.circle([location.lat, location.lon], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
                 radius: location.latestTotalCases
             }).addTo(map);
-            const popups = L.popup()
-                .setContent(`<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
-                             <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
-                             <b>Country</b>: ${location.country}
-                             <button type="button" onclick="alert(faaaaaaak)" class="forButton">Report</button>
-                            `);
+
+            const popups = L.DomUtil.create('div', 'infoWindow');
+            popups.innerHTML = `<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
+            <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+            <b>Country</b>: ${location.country}
+            <button id="reportBtn" type="button" class="forButton">Report</button>`;
             circle.bindPopup(popups);
+            $('#reportBtn', popups).on('click', function(event) {
+                $("#myModal").css({ "display": "block" });
+            });
         });
         $(".loader").hide();
     }
@@ -54,4 +59,13 @@ window.onload = (function () {
         alert("ERROR OCCUR");
     }
 
+    $('.custome-modal-header-close').on('click', function(event) {
+        $("#myModal").css({ "display": "none" });
+    });
+
+    $(window).click(function(e) {
+        if (e.target == $("#myModal")[0]) {
+            $("#myModal").css({ "display": "none" });
+        }
+    });
 })();
