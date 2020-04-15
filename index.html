@@ -16,10 +16,26 @@
 
 <body>
     <div class="loader"></div>
+    <div id="myModal" class="custome-modal">
+        <div class="custome-modal-content">
+            <div class="custome-modal-header">
+                <span class="custome-modal-header-close">&times;</span>
+                <h2>Modal Header</h2>
+            </div>
+            <div class="custome-modal-body">
+                <p>Some text in the Modal Body</p>
+                <p>Some other text...</p>
+            </div>
+            <div class="custome-modal-footer">
+                <h3>Modal Footer</h3>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-3">
             <div class="info">
                 <h3>COVID-19 Tracker</h3>
+                <button id="myBtn">hello</button>
             </div>
         </div>
         <div class="col-9">
@@ -32,7 +48,7 @@
 
     <div class='search-bar'>
         <div class="slideout_inner input-group mb-3">
-            <button><i class="fas fa-search"></i></button>
+            <button class="btnSearch"><i class="fas fa-search"></i></button>
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         </div>
     </div>

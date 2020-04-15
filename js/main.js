@@ -20,7 +20,7 @@ window.onload = (function() {
         position: 'bottomright'
     }).addTo(map);
 
-    $('button').on('click', function(event) {
+    $('.btnSearch').on('click', function(event) {
         event.preventDefault();
         if (!openSearch) {
             openSearch = true;
@@ -64,6 +64,22 @@ window.onload = (function() {
         $(".loader").hide();
         alert("ERROR OCCUR");
     }
+
+
+    $('#myBtn').on('click', function(event) {
+        $("#myModal").css({ "display": "block" });
+    });
+
+    $('.custome-modal-header-close').on('click', function(event) {
+        $("#myModal").css({ "display": "none" });
+    });
+    console.log($("#myModal"));
+
+    $(window).click(function(e) {
+        if (e.target == $("#myModal")[0]) {
+            $("#myModal").css({ "display": "none" });
+        }
+    });
 
     // function processingData(data) {
     //     const chinaState = data.filter(s => s.country === "China");
