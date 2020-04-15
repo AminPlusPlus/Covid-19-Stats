@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 /*jslint browser: true */
 /*global window */
-window.onload = (function() {
+window.onload = (function () {
     "use strict";
     let open = false;
     var map = L.map('mapid', {
@@ -16,7 +16,7 @@ window.onload = (function() {
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
-    $('button').on('click', function(event) {
+    $('button').on('click', function (event) {
         event.preventDefault();
         if (!open) {
             open = true;
@@ -31,7 +31,7 @@ window.onload = (function() {
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
-        beforeSend: function() {
+        beforeSend: function () {
             $(".loader").show();
         },
     }).done(onSuccess).fail(onFail);
@@ -50,8 +50,10 @@ window.onload = (function() {
             }).addTo(map);
             const popups = L.popup()
                 .setContent(`<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
-                               <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
-                                <b>Country</b>: ${location.country}`);
+                             <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+                             <b>Country</b>: ${location.country}
+                             <button type="button" class="forButton">Report</button>
+                            `);
             circle.bindPopup(popups).openPopup();
         });
         $(".loader").hide();
