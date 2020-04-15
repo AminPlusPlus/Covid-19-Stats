@@ -13,6 +13,7 @@ window.onload = (function() {
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
             minZoom: 4,
+            tap: false,
             zoomControl: false,
         }).addTo(map);
     L.control.zoom({
@@ -54,7 +55,7 @@ window.onload = (function() {
                 .setContent(`<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
                                <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
                                 <b>Country</b>: ${location.country}`);
-            circle.bindPopup(popups).openPopup();
+            circle.bindPopup(popups);
         });
         $(".loader").hide();
     }
