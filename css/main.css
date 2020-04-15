@@ -69,6 +69,18 @@ body,
     }
 }
 
+.forButton {
+    background-color: #ff5050;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+}
+
 .loader::after {
     content: '';
     display: block;

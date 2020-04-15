@@ -53,8 +53,10 @@ window.onload = (function() {
             }).addTo(map);
             const popups = L.popup()
                 .setContent(`<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
-                               <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
-                                <b>Country</b>: ${location.country}`);
+                             <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+                             <b>Country</b>: ${location.country}
+                             <button type="button" class="forButton">Report</button>
+                            `);
             circle.bindPopup(popups);
         });
         $(".loader").hide();
