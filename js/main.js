@@ -3,7 +3,6 @@
 /*global window */
 window.onload = (function() {
     "use strict";
-    let openSearch = false;
     var map = L.map('mapid', {
         zoomControl: false,
         worldCopyJump: true
@@ -56,7 +55,7 @@ window.onload = (function() {
 
     function onFail() {
         $(".loader").hide();
-        alert("ERROR OCCUR");
+        alert("ERROR OCCURED");
     }
 
     $('.custome-modal-header-close').on('click', function(event) {
