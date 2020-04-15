@@ -50,6 +50,9 @@ body,
     z-index: 9999;
     display: none;
 }
+h3 {
+    padding: 10px;
+}
 
 @-webkit-keyframes spin {
     from {
