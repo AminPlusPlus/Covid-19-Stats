@@ -14,16 +14,7 @@ body,
     height: 100vh;
 }
 
-.search-bar {
-    position: fixed;
-    top: 10px;
-    right: 0;
-    z-index: 9999;
-    -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
+
 
 .slideout_inner {
     position: fixed;
@@ -67,6 +58,10 @@ body,
     to {
         transform: rotate(360deg);
     }
+}
+
+h3 {
+    padding: 10px;
 }
 
 .forButton {
