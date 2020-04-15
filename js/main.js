@@ -3,14 +3,15 @@
 /*global window */
 window.onload = (function() {
     "use strict";
-    let openSearch = false;
+
     var map = L.map('mapid', {
         zoomControl: false,
         worldCopyJump: true
-    }).setView([-41.2858, 174.78682], 4);
-
+    }).setView([0,0], 4);
+    const attribution = '&copy; <a href="https://www.openstreetmaps.org/copyright">OpenStreetMap</a> contributors';
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution,
             maxZoom: 18,
             minZoom: 4,
             tap: false,
@@ -68,7 +69,6 @@ window.onload = (function() {
                 });
                 //$(".loader").hide();
             });
-
     }
 
     $('.custome-modal-header-close').on('click', function(event) {
