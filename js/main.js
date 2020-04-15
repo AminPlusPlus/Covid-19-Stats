@@ -3,14 +3,15 @@
 /*global window */
 window.onload = (function() {
     "use strict";
+
     var map = L.map('mapid', {
         zoomControl: false,
         worldCopyJump: true
-    }).setView([0,0], 1);
+    }).setView([0,0], 2);
     const attribution = '&copy; <a href="https://www.openstreetmaps.org/copyright">OpenStreetMap</a> contributors';
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution,
+            attribution, //Implementation of attribution is required by OpenStreetMap
             maxZoom: 18,
             minZoom: 2,
             tap: false,
@@ -20,42 +21,45 @@ window.onload = (function() {
         position: 'bottomright'
     }).addTo(map);
 
-    $.ajax({
-        url: "https://covid-19-273501.appspot.com/api/v1/confirms",
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            $(".loader").show();
-        },
-    }).done(onSuccess).fail(onFail);
 
-    function onSuccess(response) {
-        let circle;
-        response.forEach((location) => {
-            circle = L.circle([location.lat, location.lon], {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: location.latestTotalCases
-            }).addTo(map);
+    (function() {
+        fetchData();
+    })();
 
-            const popups = L.DomUtil.create('div', 'infoWindow');
-            popups.innerHTML = `<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
-            <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
-            <b>Country</b>: ${location.country}
-            <button id="reportBtn" type="button" class="forButton">Report</button>`;
-            circle.bindPopup(popups);
-            $('#reportBtn', popups).on('click', function(event) {
-                $("#myModal").css({ "display": "block" });
-            });
-        });
-        $(".loader").hide();
-    }
+    function fetchData() {
+        $(".loader").show();
+        fetch("https://covid-19-273501.appspot.com/api/v1/confirms", {
+            method: 'GET',
+        }).then(response => {
+            if (response.ok)
+                return response.json();
+            else
+                return Promise.reject({ status: response.status, statusText: response.statusText });
+        })
+            //After receiving the data,
+            .then(data => {
+                data.forEach((location) => {
+                    let circle = L.circle([location.lat, location.lon], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: location.latestTotalCases
+                    }).addTo(map);
 
-    function onFail() {
-        $(".loader").hide();
-        alert("ERROR OCCURED");
+                    const popups = L.DomUtil.create('div', 'infoWindow');
+                    popups.innerHTML = `<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
+                     <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+                     <b>Country</b>: ${location.country}
+                     <button id="reportBtn" type="button" class="forButton">Report</button>`;
+                    circle.bindPopup(popups);
+                    $('#reportBtn', popups).on('click', function(event) {
+                        $("#myModal").css({ "display": "block" });
+                    });
+                });
+                $(".loader").hide();
+            })
+            //Else, catch error and alert
+        .catch(error => alert("error"));
     }
 
     $('.custome-modal-header-close').on('click', function(event) {
