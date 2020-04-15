@@ -3,6 +3,7 @@
 /*global window */
 window.onload = (function() {
     "use strict";
+
     var map = L.map('mapid', {
         zoomControl: false,
         worldCopyJump: true
@@ -19,6 +20,17 @@ window.onload = (function() {
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
+
+    $('.btnSearch').on('click', function(event) {
+        event.preventDefault();
+        if (!openSearch) {
+            openSearch = true;
+            $('.slideout_inner').addClass('active');
+        } else {
+            openSearch = false;
+            $('.slideout_inner').removeClass("active");
+        }
+    });
 
     $.ajax({
         url: "https://covid-19-273501.appspot.com/api/v1/confirms",
