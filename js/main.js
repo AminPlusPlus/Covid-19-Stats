@@ -32,42 +32,43 @@ window.onload = (function() {
         }
     });
 
-    $.ajax({
-        url: "https://covid-19-273501.appspot.com/api/v1/confirms",
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            $(".loader").show();
-        },
-    }).done(onSuccess).fail(onFail);
+    (function() {
+        fetchData();
+    })();
 
-    function onSuccess(response) {
-        let circle;
-        response.forEach((location) => {
-            circle = L.circle([location.lat, location.lon], {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: location.latestTotalCases
-            }).addTo(map);
 
-            const popups = L.DomUtil.create('div', 'infoWindow');
-            popups.innerHTML = `<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
-            <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
-            <b>Country</b>: ${location.country}
-            <button id="reportBtn" type="button" class="forButton">Report</button>`;
-            circle.bindPopup(popups);
-            $('#reportBtn', popups).on('click', function(event) {
-                $("#myModal").css({ "display": "block" });
+    function fetchData() {
+        //$(".loader").show();
+        fetch("https://covid-19-273501.appspot.com/api/v1/confirms", {
+                method: 'GET',
+            }).then(response => {
+                if (response.ok)
+                    return response.json();
+                else
+                    return Promise.reject({ status: response.status, statusText: response.statusText });
+            })
+            //After receiving the data,
+            .then(data => {
+                data.forEach((location) => {
+                    let circle = L.circle([location.lat, location.lon], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: location.latestTotalCases
+                    }).addTo(map);
+
+                    const popups = L.DomUtil.create('div', 'infoWindow');
+                    popups.innerHTML = `<b>Latest Total Cases</b>: ${location.latestTotalCases} <br /> 
+                     <b>Previous Day Difference</b>: ${location.diffFromPrevDay} <br />
+                     <b>Country</b>: ${location.country}
+                     <button id="reportBtn" type="button" class="forButton">Report</button>`;
+                    circle.bindPopup(popups);
+                    $('#reportBtn', popups).on('click', function(event) {
+                        $("#myModal").css({ "display": "block" });
+                    });
+                });
+                //$(".loader").hide();
             });
-        });
-        $(".loader").hide();
-    }
-
-    function onFail() {
-        $(".loader").hide();
-        alert("ERROR OCCURED");
     }
 
     $('.custome-modal-header-close').on('click', function(event) {
