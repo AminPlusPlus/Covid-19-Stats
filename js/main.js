@@ -88,16 +88,24 @@ window.onload = (function() {
             url: 'https://covid-19-273501.appspot.com/api/v1/reports',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
+            beforeSend: function() {
+                $(".loader").show();
+            },
             data: JSON.stringify(data),
         }).done(onClickSuccess).fail(onClickFail);
     });
 
     function onClickSuccess(response) {
+        document.getElementById("email").value = "";
+        document.getElementById("message").value = "";
+        reportLocation = {};
+        $(".loader").hide();
         $("#myModal").css({ "display": "none" });
         alert('REPORT SUCCESS');
     }
 
     function onClickFail() {
+        $(".loader").hide();
         $("#myModal").css({ "display": "none" });
         alert("ERROR OCCUR");
     }
