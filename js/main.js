@@ -1,9 +1,9 @@
 /*jshint esversion: 9 */
 /*jslint browser: true */
 /*global window */
-window.onload = (function () {
+window.onload = (function() {
     "use strict";
-
+    let reportLocation;
     var map = L.map('mapid', {
         zoomControl: false,
         worldCopyJump: true
@@ -11,18 +11,18 @@ window.onload = (function () {
     const attribution = '&copy; <a href="https://www.openstreetmaps.org/copyright">OpenStreetMap</a> contributors';
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution, //Implementation of attribution is required by OpenStreetMap
-        maxZoom: 18,
-        minZoom: 2,
-        tap: false,
-        zoomControl: false,
-    }).addTo(map);
+            attribution, //Implementation of attribution is required by OpenStreetMap
+            maxZoom: 18,
+            minZoom: 2,
+            tap: false,
+            zoomControl: false,
+        }).addTo(map);
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
 
 
-    (function () {
+    (function() {
         map.removeLayer(L.geoJson);
         fetchData("yellow", "yellow", "confirms");
     })();
@@ -30,13 +30,13 @@ window.onload = (function () {
     function fetchData(color, fillColor, api) {
         $(".loader").show();
         fetch("https://covid-19-273501.appspot.com/api/v1/" + api, {
-            method: 'GET',
-        }).then(response => {
-            if (response.ok)
-                return response.json();
-            else
-                return Promise.reject({ status: response.status, statusText: response.statusText });
-        })
+                method: 'GET',
+            }).then(response => {
+                if (response.ok)
+                    return response.json();
+                else
+                    return Promise.reject({ status: response.status, statusText: response.statusText });
+            })
             //After receiving the data,
             .then(data => {
                 data.forEach((location) => {
@@ -53,7 +53,8 @@ window.onload = (function () {
                      <b>Country</b>: ${location.country}
                      <button id="reportBtn" type="button" class="forButton">Report</button>`;
                     circle.bindPopup(popups);
-                    $('#reportBtn', popups).on('click', function (event) {
+                    $('#reportBtn', popups).on('click', function(event) {
+                        reportLocation = location;
                         $("#myModal").css({ "display": "block" });
                     });
                 });
@@ -63,17 +64,43 @@ window.onload = (function () {
             .catch(error => alert("error"));
     }
 
-    $('.custome-modal-header-close').on('click', function (event) {
+    $('.custome-modal-header-close').on('click', function(event) {
         $("#myModal").css({ "display": "none" });
     });
 
-    $(window).click(function (e) {
+    $(window).click(function(e) {
         if (e.target == $("#myModal")[0]) {
             $("#myModal").css({ "display": "none" });
         }
     });
 
+    document.getElementById("reportBtn").addEventListener("click", function(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const data = {
+            "email": email,
+            "message": message,
+            "locationData": reportLocation
+        };
+        $.ajax({
+            type: 'POST',
+            url: 'https://covid-19-273501.appspot.com/api/v1/reports',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+        }).done(onClickSuccess).fail(onClickFail);
+    });
 
+    function onClickSuccess(response) {
+        $("#myModal").css({ "display": "none" });
+        alert('REPORT SUCCESS');
+    }
+
+    function onClickFail() {
+        $("#myModal").css({ "display": "none" });
+        alert("ERROR OCCUR");
+    }
 
 
     let covid19table;
@@ -89,7 +116,7 @@ window.onload = (function () {
         ]
     });
 
-    document.getElementById("confirms").addEventListener("click", function () {
+    document.getElementById("confirms").addEventListener("click", function() {
         fetchData("yellow", "yellow", "confirms");
         console.log("confirms api called")
         $(".nav-link").removeClass("active");
@@ -109,7 +136,7 @@ window.onload = (function () {
         });
     });
 
-    document.getElementById("deaths").addEventListener("click", function () {
+    document.getElementById("deaths").addEventListener("click", function() {
         fetchData("red", "red", "deaths");
         console.log("deaths api called");
         $(".nav-link").removeClass("active");
@@ -128,7 +155,7 @@ window.onload = (function () {
         });
     });
 
-    document.getElementById("recovers").addEventListener("click", function () {
+    document.getElementById("recovers").addEventListener("click", function() {
         fetchData("green", "green", "recovers");
         console.log("recovers api called")
         $(".nav-link").removeClass("active");
